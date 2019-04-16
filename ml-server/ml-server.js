@@ -99,8 +99,8 @@ function checkIfFinished() {
 
 function sendTags(outputTweetsArray) {
     const options = {
-        hostname: '',
-        port: 3000,
+        hostname: 'israrate-db.herokuapp.com',
+        port: 80,
         path: '/api/feed/setscore',
         method: 'POST'
       };
