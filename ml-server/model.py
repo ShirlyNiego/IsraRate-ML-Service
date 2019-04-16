@@ -2,7 +2,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 import pickle
-import os 
+import os
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
 class Vocab:
