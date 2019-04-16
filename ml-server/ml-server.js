@@ -28,8 +28,9 @@
 
 const { exec } = require('child_process');
 const http = require('http');
+const path = require('path')
 
-var modelScript = "model.py";
+var modelScript = path.join(__dirname,"model.py");
 
 var processedTweets = 0;
 var requiredTweets = 2;
