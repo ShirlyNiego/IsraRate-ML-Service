@@ -46,8 +46,9 @@ http.get('http://israrate-db.herokuapp.com/api/feed/GetRawFeedCount?limit=0', (r
 
   // The whole response has been received. Print out the result.
   resp.on('end', () => {
-    requiredTweets = data.tweets.length;
-    tagTweets(data.tweets);
+    var respData = JSON.parse(data).data
+    requiredTweets = respData.tweets.length;
+    tagTweets(respData.tweets);
   });
 
 }).on("error", (err) => {
