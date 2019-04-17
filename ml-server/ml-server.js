@@ -37,7 +37,7 @@ var requiredTweets = 2;
 outputTweets = [];
 
 // TODO: Run in loop every X seconds
-http.get('http://israrate-db.herokuapp.com/api/feed/GetRawFeedCount?limit=10', (resp) => {
+http.get('http://israrate-db.herokuapp.com/api/feed/GetRawFeedCount?limit=20', (resp) => {
   let data = '';
 
   // A chunk of data has been recieved.
@@ -102,7 +102,7 @@ function sendTags(outputTweetsArray) {
     let body = JSON.stringify(outputTweetsArray);
 
     const options = {
-        hostname: 'localhost',
+        hostname: 'israrate-db.herokuapp.com',
         port: 80,
         path: '/api/feed/setscore',
         method: 'POST',
