@@ -37,7 +37,7 @@ var requiredTweets = 2;
 outputTweets = [];
 
 // TODO: Run in loop every X seconds
-http.get('http://israrate-db.herokuapp.com/api/feed/GetRawFeedCount?limit=20', (resp) => {
+http.get('http://israrate-db.herokuapp.com/api/feed/GetRawFeedCount?limit=10', (resp) => {
   let data = '';
 
   // A chunk of data has been recieved.
