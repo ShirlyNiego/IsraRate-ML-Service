@@ -2,6 +2,8 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 import pickle
+import os
+dir_path = os.path.dirname(os.path.realpath(__file__))
 
 class Vocab:
     def __init__(self):
@@ -130,11 +132,11 @@ class EmoModel(nn.Module):
         return (torch.zeros(self.n_layers*2, 1, self.hidden_size),
                     torch.zeros(self.n_layers*2, 1, self.hidden_size))
 
-with open("vocab.pkl", 'rb') as input:
+with open(os.path.join(dir_path,"vocab.pkl"), 'rb') as input:
 	vocab = pickle.load(input)	
 
 	
-model = torch.load("trainedModel.pt", map_location='cpu')
+model = torch.load(os.path.join(dir_path,"trainedModel.pt"), map_location='cpu')
 
 import sys
 sentence = sys.argv[1].split()

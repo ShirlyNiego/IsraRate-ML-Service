@@ -28,15 +28,16 @@
 
 const { exec } = require('child_process');
 const http = require('http');
+const path = require('path')
 
-var modelScript = "model.py";
+var modelScript = path.join(__dirname,"model.py");
 
 var processedTweets = 0;
 var requiredTweets = 2;
 outputTweets = [];
 
 // TODO: Run in loop every X seconds
-http.get('http://localhost:8080/api/feed/GetRawFeedCount?limit=0', (resp) => {
+http.get('http://israrate-db.herokuapp.com/api/feed/GetRawFeedCount?limit=10', (resp) => {
   let data = '';
 
   // A chunk of data has been recieved.
@@ -46,8 +47,9 @@ http.get('http://localhost:8080/api/feed/GetRawFeedCount?limit=0', (resp) => {
 
   // The whole response has been received. Print out the result.
   resp.on('end', () => {
-    requiredTweets = data.tweets.length;
-    tagTweets(data.tweets);
+    var respData = JSON.parse(data).data
+    requiredTweets = respData.tweets.length;
+    tagTweets(respData.tweets);
   });
 
 }).on("error", (err) => {
@@ -91,16 +93,23 @@ function checkIfFinished() {
     requiredTweets = 2;
 
     // Send the tagged tweets back to the DB
-    sendTags(outputTweets);
+    sendTags({"tweets": outputTweets});
   }
 }
 
 function sendTags(outputTweetsArray) {
+
+    let body = JSON.stringify(outputTweetsArray);
+
     const options = {
-        hostname: '',
-        port: 3000,
+        hostname: 'israrate-db.herokuapp.com',
+        port: 80,
         path: '/api/feed/setscore',
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(body)
+      }
       };
     
     const req = http.request(options, (resp) => {
@@ -111,7 +120,7 @@ function sendTags(outputTweetsArray) {
         console.error(`problem with request: ${e.message}`);
       });
     
-    req.write(JSON.stringify(outputTweetsArray));
+    req.write(body);
     req.end();
 }
 
