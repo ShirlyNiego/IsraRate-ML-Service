@@ -33,29 +33,31 @@ const path = require('path')
 var modelScript = path.join(__dirname,"model.py");
 
 var processedTweets = 0;
-var requiredTweets = 2;
+var requiredTweets = 0;
 outputTweets = [];
+var minutes = 5;
 
-// TODO: Run in loop every X seconds
-http.get('http://israrate-db.herokuapp.com/api/feed/GetRawFeedCount?limit=10', (resp) => {
-  let data = '';
+var interval = minutes * 60 * 1000;
+setInterval(function() {
+  http.get('http://israrate-db.herokuapp.com/api/feed/GetRawFeedCount?limit=10', (resp) => {
+    let data = '';
 
-  // A chunk of data has been recieved.
-  resp.on('data', (chunk) => {
-    data += chunk;
+    // A chunk of data has been recieved.
+    resp.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    // The whole response has been received. Print out the result.
+    resp.on('end', () => {
+      var respData = JSON.parse(data).data
+      requiredTweets = respData.tweets.length;
+      tagTweets(respData.tweets);
+    });
+
+  }).on("error", (err) => {
+    console.log("Error: " + err.message);
   });
-
-  // The whole response has been received. Print out the result.
-  resp.on('end', () => {
-    var respData = JSON.parse(data).data
-    requiredTweets = respData.tweets.length;
-    tagTweets(respData.tweets);
-  });
-
-}).on("error", (err) => {
-  console.log("Error: " + err.message);
-});
-
+}, interval);
 
 function tagTweets(inputTweetsArray) {
   // Go over all of the tweets
@@ -90,7 +92,7 @@ function checkIfFinished() {
   if (processedTweets >= requiredTweets) {
     console.log(outputTweets);
     processedTweets = 0;
-    requiredTweets = 2;
+    requiredTweets = 0;
 
     // Send the tagged tweets back to the DB
     sendTags({"tweets": outputTweets});
