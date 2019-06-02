@@ -1,9 +1,23 @@
+import spacy as sp
+import pandas as pd
+import numpy as np
+import spacy as sp
 import torch
 from torch import nn
+from torch import optim
+import random
 import torch.nn.functional as F
+from sklearn import preprocessing
+import sklearn.metrics.pairwise as pairwise
+from datetime import datetime, date, time
+import re
+import codecs
+from sklearn.metrics import accuracy_score
+from collections import Counter
+import string 
+from random import shuffle
+from sklearn.metrics import precision_recall_fscore_support
 import pickle
-import os
-dir_path = os.path.dirname(os.path.realpath(__file__))
 
 class Vocab:
     def __init__(self):
@@ -132,25 +146,40 @@ class EmoModel(nn.Module):
         return (torch.zeros(self.n_layers*2, 1, self.hidden_size),
                     torch.zeros(self.n_layers*2, 1, self.hidden_size))
 
-with open(os.path.join(dir_path,"vocab.pkl"), 'rb') as input:
+with open("vocab.pkl", 'rb') as input:
 	vocab = pickle.load(input)	
-
 	
-model = torch.load(os.path.join(dir_path,"trainedModel.pt"), map_location='cpu')
+model = torch.load("trainedModel.pt", map_location='cpu')
 
 import sys
+
 sentence = sys.argv[1].split()
+sentence = sentence.replace("\\xe2\\x80\\x99", "'")
+sentence = sentence.replace("&amp;", "&")
+sentence = re.sub(r"http\S+", "", sentence)
+
+if sentence.startswith('b\'') or sentence.startswith('b\"'):
+    sentence = sentence[2:]
+if sentence.endswith('\'') or sentence.endswith('\"'):
+    sentence = sentence[:-1]
+
+sentence = sentence.lstrip(' ')
+sentence = re.sub(r"@\S+", "", sentence)
+sentence = re.sub(' +', ' ', sentence)                
 indexes = vocab.index_document(sentence)
-#print(indexes);
-sentence = torch.tensor(indexes)
-output = model(sentence)
-max = output[0]
-maxID = 0
-if (output[1] > max):
-	max = output[1]
-	maxID = 1
-if (output[2] > max):
-	max = output[2]
-	maxID = 2
+
+if (len(indexes) == 0):
+    maxID=0
+else:    
+    sentence = torch.tensor(indexes)
+    output = model(sentence)
+    max = output[0]
+    maxID = 0
+    if (output[1] > max):
+        max = output[1]
+        maxID = 1
+    if (output[2] > max):
+        max = output[2]
+        maxID = 2
 
 print (vocab.id2tag[maxID])	
