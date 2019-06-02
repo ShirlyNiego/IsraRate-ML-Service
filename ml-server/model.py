@@ -152,8 +152,9 @@ with open("vocab.pkl", 'rb') as input:
 model = torch.load("trainedModel.pt", map_location='cpu')
 
 import sys
+import numpy
 
-sentence = sys.argv[1].split()
+sentence = sys.argv[1]
 sentence = sentence.replace("\\xe2\\x80\\x99", "'")
 sentence = sentence.replace("&amp;", "&")
 sentence = re.sub(r"http\S+", "", sentence)
@@ -165,11 +166,12 @@ if sentence.endswith('\'') or sentence.endswith('\"'):
 
 sentence = sentence.lstrip(' ')
 sentence = re.sub(r"@\S+", "", sentence)
-sentence = re.sub(' +', ' ', sentence)                
+sentence = re.sub(' +', ' ', sentence)   
+sentence = sentence.split()             
 indexes = vocab.index_document(sentence)
 
 if (len(indexes) == 0):
-    maxID=0
+    maxID = numpy.random.choice((vocab.tag2id[-1], vocab.tag2id[0], vocab.tag2id[1]), p=[0.334, 0.382, 0.284])
 else:    
     sentence = torch.tensor(indexes)
     output = model(sentence)
