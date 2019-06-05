@@ -66,7 +66,7 @@ function tagTweets(inputTweetsArray) {
   // Go over all of the tweets
   for (var i = 0; i < inputTweetsArray.length; i++) {
       (function(i){
-        var tweetText = inputTweetsArray[i].text.replace(/['"]+/g, '');
+        var tweetText = inputTweetsArray[i].text.replace(/[`'"]+/g, '');
         
         // Run the model in new python child process
         exec('python -W ignore ' + modelScript + ' "' + tweetText + '"', (err, stdout, stderr) => {
