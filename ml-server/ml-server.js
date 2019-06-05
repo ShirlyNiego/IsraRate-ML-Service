@@ -35,7 +35,7 @@ var modelScript = path.join(__dirname,"model.py");
 var processedTweets = 0;
 var requiredTweets = 0;
 outputTweets = [];
-var minutes = 1;
+var minutes = 0.5;
 
 var interval = minutes * 60 * 1000;
 console.log("starting server!");
@@ -53,6 +53,7 @@ setInterval(function() {
     resp.on('end', () => {
       var respData = JSON.parse(data).data
       requiredTweets = respData.tweets.length;
+      console.log("Starting to tag " + respData.tweets.length + " tweets");
       tagTweets(respData.tweets);
     });
 
@@ -83,7 +84,7 @@ function tagTweets(inputTweetsArray) {
             tag: stdout
           });
 
-          console.log("Tagged " + stdout);
+          //console.log("Tagged " + stdout);
 
           // Check if we have finished with all of the tweets we need to tag
           checkIfFinished();
