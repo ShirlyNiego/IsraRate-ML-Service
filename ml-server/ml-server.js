@@ -35,11 +35,13 @@ var modelScript = path.join(__dirname,"model.py");
 var processedTweets = 0;
 var requiredTweets = 0;
 outputTweets = [];
-var minutes = 5;
+var minutes = 1;
 
 var interval = minutes * 60 * 1000;
+console.log("starting server!");
+
 setInterval(function() {
-  http.get('http://israrate-db.herokuapp.com/api/feed/GetRawFeedCount?limit=10', (resp) => {
+  http.get('http://israrate-db.herokuapp.com/api/feed/GetRawFeedCount?limit=20', (resp) => {
     let data = '';
 
     // A chunk of data has been recieved.
@@ -81,6 +83,8 @@ function tagTweets(inputTweetsArray) {
             tag: stdout
           });
 
+          console.log("Tagged " + stdout);
+
           // Check if we have finished with all of the tweets we need to tag
           checkIfFinished();
         });
@@ -90,7 +94,6 @@ function tagTweets(inputTweetsArray) {
 
 function checkIfFinished() {
   if (processedTweets >= requiredTweets) {
-    console.log(outputTweets);
     processedTweets = 0;
     requiredTweets = 0;
 
