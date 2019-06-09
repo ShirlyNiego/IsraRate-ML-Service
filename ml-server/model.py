@@ -152,7 +152,7 @@ class EmoModel(nn.Module):
 with open(os.path.join(currDir,"vocab.pkl"), 'rb') as input:
 	vocab = pickle.load(input)	
 	
-model = torch.load("trainedModel.pt", map_location='cpu')
+model = torch.load(os.path.join(currDir,"trainedModel.pt"), map_location='cpu')
 
 import sys
 import numpy
