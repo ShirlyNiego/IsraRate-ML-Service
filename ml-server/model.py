@@ -18,6 +18,9 @@ import string
 from random import shuffle
 from sklearn.metrics import precision_recall_fscore_support
 import pickle
+import os
+
+currDir = os.path.dirname(os.path.realpath(__file__))
 
 class Vocab:
     def __init__(self):
@@ -146,7 +149,7 @@ class EmoModel(nn.Module):
         return (torch.zeros(self.n_layers*2, 1, self.hidden_size),
                     torch.zeros(self.n_layers*2, 1, self.hidden_size))
 
-with open("vocab.pkl", 'rb') as input:
+with open(os.path.join(currDir,"vocab.pkl"), 'rb') as input:
 	vocab = pickle.load(input)	
 	
 model = torch.load("trainedModel.pt", map_location='cpu')
