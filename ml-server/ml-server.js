@@ -41,7 +41,7 @@ var interval = minutes * 60 * 1000;
 console.log("starting server!");
 
 setInterval(function() {
-  http.get('http://israrate-db.herokuapp.com/api/feed/GetRawFeedCount?limit=20', (resp) => {
+  http.get('http://db/api/feed/GetRawFeedCount?limit=20', (resp) => {
     let data = '';
 
     // A chunk of data has been recieved.
@@ -100,8 +100,10 @@ function checkIfFinished() {
     processedTweets = 0;
     requiredTweets = 0;
 
+    tweetsToSend = outputTweets;
+    outputTweets = [];
     // Send the tagged tweets back to the DB
-    sendTags({"tweets": outputTweets});
+    sendTags({"tweets": tweetsToSend});
   }
 }
 
@@ -110,7 +112,7 @@ function sendTags(outputTweetsArray) {
     let body = JSON.stringify(outputTweetsArray);
 
     const options = {
-        hostname: 'israrate-db.herokuapp.com',
+        hostname: 'db',
         port: 80,
         path: '/api/feed/setscore',
         method: 'POST',
