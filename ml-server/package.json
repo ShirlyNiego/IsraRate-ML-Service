@@ -1,0 +1,24 @@
+{
+  "name": "israrate-ml-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "ml-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShirlyNiego/IsraRate-ML-Service.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShirlyNiego/IsraRate-ML-Service/issues"
+  },
+  "homepage": "https://github.com/ShirlyNiego/IsraRate-ML-Service#readme",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "http": "0.0.0",
+    "path": "^0.12.7"
+  }
+}
